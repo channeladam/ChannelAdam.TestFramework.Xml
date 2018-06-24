@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <Description>A .NET Standard 2.0 library with functionality for comparing XML (using XmlUnit).</Description>
+    <RootNamespace>ChannelAdam.TestFramework</RootNamespace>
+    <Authors>Adam Craven</Authors>
+    <Version>0.0.0</Version>
+    <Copyright>Copyright 2014-2018 Adam Craven</Copyright>
+    <PackageLicenseUrl>http://www.apache.org/licenses/LICENSE-2.0</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/channeladam/ChannelAdam.TestFramework.Xml</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/channeladam/ChannelAdam.TestFramework.Xml</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageIconUrl>https://devzone.channeladam.com/img/channeladam/channeladam-logo.png</PackageIconUrl>
+    <PackageTags>ChannelAdam,Tests,Unit,Integration,XML,Diff</PackageTags>
+    <PackageReleaseNotes>2.0.0 - Refactored out of ChannelAdam.TestFramework v1, target .NET Standard 2.0, no strong name signing</PackageReleaseNotes>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="ChannelAdam.Logging" Version="2.1.0" />
+    <PackageReference Include="ChannelAdam.Reflection" Version="2.0.0" />
+    <PackageReference Include="ChannelAdam.TestFramework" Version="2.2.0" />
+    <PackageReference Include="ChannelAdam.TestFramework.Text" Version="2.0.0" />
+    <PackageReference Include="XmlUnit.Core" Version="2.6.0" />
+  </ItemGroup>
+
+</Project>

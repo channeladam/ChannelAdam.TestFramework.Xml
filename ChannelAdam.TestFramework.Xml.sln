@@ -1,0 +1,44 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27703.2026
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{E2CD5A81-B25E-431D-9EA6-0CF99A209408}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{03B16843-83AD-4206-A1F6-F04C22BE587C}"
+	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
+		GitVersion.yml = GitVersion.yml
+		README.md = README.md
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChannelAdam.TestFramework.Xml", "src\ChannelAdam.TestFramework.Xml\ChannelAdam.TestFramework.Xml.csproj", "{6A75AA38-D131-4D06-BFDF-7E7CEE739A3B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BehaviourSpecs", "src\BehaviourSpecs\BehaviourSpecs.csproj", "{793854B0-6300-4D4D-8BAA-2BF4E780504F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6A75AA38-D131-4D06-BFDF-7E7CEE739A3B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6A75AA38-D131-4D06-BFDF-7E7CEE739A3B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6A75AA38-D131-4D06-BFDF-7E7CEE739A3B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6A75AA38-D131-4D06-BFDF-7E7CEE739A3B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{793854B0-6300-4D4D-8BAA-2BF4E780504F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{793854B0-6300-4D4D-8BAA-2BF4E780504F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{793854B0-6300-4D4D-8BAA-2BF4E780504F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{793854B0-6300-4D4D-8BAA-2BF4E780504F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{6A75AA38-D131-4D06-BFDF-7E7CEE739A3B} = {E2CD5A81-B25E-431D-9EA6-0CF99A209408}
+		{793854B0-6300-4D4D-8BAA-2BF4E780504F} = {E2CD5A81-B25E-431D-9EA6-0CF99A209408}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {A7BB878B-AFA1-498E-88D0-A3781B225348}
+	EndGlobalSection
+EndGlobal
