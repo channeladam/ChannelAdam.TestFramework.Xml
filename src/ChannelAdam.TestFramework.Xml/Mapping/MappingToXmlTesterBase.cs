@@ -1,6 +1,6 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="MappingToXmlTesterBase.cs">
-//     Copyright (c) 2016-2018 Adam Craven. All rights reserved.
+//     Copyright (c) 2016-2021 Adam Craven. All rights reserved.
 // </copyright>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -63,14 +63,14 @@ namespace ChannelAdam.TestFramework.Mapping
 
         #region Properties
 
-        public XElement ActualOutputXml
+        public XElement? ActualOutputXml
         {
             get { return this.xmlTester.ActualXml; }
 
             set { this.xmlTester.ArrangeActualXml(value); }
         }
 
-        public XElement ExpectedOutputXml
+        public XElement? ExpectedOutputXml
         {
             get { return this.xmlTester.ExpectedXml; }
         }
@@ -99,7 +99,7 @@ namespace ChannelAdam.TestFramework.Mapping
         /// Arrange the expected output XML from the given XElement.
         /// </summary>
         /// <param name="xmlElement">The XElement to use as expected output.</param>
-        public void ArrangeExpectedOutputXml(XElement xmlElement)
+        public void ArrangeExpectedOutputXml(XElement? xmlElement)
         {
             this.xmlTester.ArrangeExpectedXml(xmlElement);
         }
@@ -127,10 +127,30 @@ namespace ChannelAdam.TestFramework.Mapping
         /// Arrange the expected output XML by serialising the given object into XML.
         /// </summary>
         /// <param name="valueToSerialise">The object to serialise as XML to be used as the expected output.</param>
+        /// <param name="equalityKeyOfXmlAttributeOverridesToAvoidXmlSerializerMemoryLeak">Key of the XmlSerializer cache, unique for the given XmlAttributeOverrides, used to avoid XmlSerializer memory leaks. CAUTION: XmlAttributeOverrides.GetHashCode() returns a different value for each instance, even if each instance has the exact same objects - so consider making your own equality key based on what you added to the XmlAttributeOverrides.</param>
         /// <param name="xmlAttributeOverrides">The XML attribute overrides.</param>
-        public void ArrangeExpectedOutputXml(object valueToSerialise, XmlAttributeOverrides xmlAttributeOverrides)
+        /// <remarks>
+        /// <para>
+        /// https://docs.microsoft.com/en-us/dotnet/api/system.xml.serialization.xmlserializer?view=net-5.0#dynamically-generated-assemblies
+        /// Dynamically Generated Assemblies
+        /// To increase performance, the XML serialization infrastructure dynamically generates assemblies to serialize and deserialize specified types.
+        /// The infrastructure finds and reuses those assemblies.
+        /// This behavior occurs only when using the following constructors:
+        ///   XmlSerializer.XmlSerializer(Type)
+        ///   XmlSerializer.XmlSerializer(Type, String)
+        /// If you use any of the other constructors, multiple versions of the same assembly are generated and never unloaded, which results in a memory leak and poor performance.
+        /// The easiest solution is to use one of the previously mentioned two constructors.
+        /// Otherwise, you must cache the assemblies...
+        /// </para>
+        /// <para>
+        /// ChannelAdam.Xml does the caching for you, but it requires you to specify the key to use in the cache.
+        /// CAUTION: XmlAttributeOverrides.GetHashCode() returns a different value for each instance, even if each instance has the exact same objects
+        ///   - so consider making your own equality key based on what you added to the XmlAttributeOverrides.
+        /// </para>
+        /// </remarks>
+        public void ArrangeExpectedOutputXml(object valueToSerialise, string equalityKeyOfXmlAttributeOverridesToAvoidXmlSerializerMemoryLeak, XmlAttributeOverrides xmlAttributeOverrides)
         {
-            this.xmlTester.ArrangeExpectedXml(valueToSerialise, xmlAttributeOverrides);
+            this.xmlTester.ArrangeExpectedXml(valueToSerialise, equalityKeyOfXmlAttributeOverridesToAvoidXmlSerializerMemoryLeak, xmlAttributeOverrides);
         }
 
         /// <summary>
@@ -180,7 +200,7 @@ namespace ChannelAdam.TestFramework.Mapping
         /// Assert the Actual Output XML against the Expected Output XML, ignoring the elements specified by the given XML filter.
         /// </summary>
         /// <param name="xmlFilter">The XML filter to be applied to ignore specified elements from the assertion.</param>
-        public void AssertActualOutputXmlEqualsExpectedOutputXml(IXmlFilter xmlFilter)
+        public void AssertActualOutputXmlEqualsExpectedOutputXml(IXmlFilter? xmlFilter)
         {
             this.xmlTester.AssertActualXmlEqualsExpectedXml(xmlFilter);
         }
@@ -191,13 +211,13 @@ namespace ChannelAdam.TestFramework.Mapping
 
         #region Private Methods
 
-        private void XmlTester_ActualXmlChangedEvent(object sender, XmlChangedEventArgs e)
+        private void XmlTester_ActualXmlChangedEvent(object? sender, XmlChangedEventArgs e)
         {
             this.Logger.Log();
             this.Logger.Log($"The actual output XML from the map is: {Environment.NewLine}{e.Xml}");
         }
 
-        private void XmlTester_ExpectedXmlChangedEvent(object sender, XmlChangedEventArgs e)
+        private void XmlTester_ExpectedXmlChangedEvent(object? sender, XmlChangedEventArgs e)
         {
             this.Logger.Log();
             this.Logger.Log($"The expected output XML of the map is: {Environment.NewLine}{e.Xml}");

@@ -1,27 +1,48 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
-    <Description>A .NET Standard 2.0 library with functionality for comparing XML (using XmlUnit).</Description>
+    <TargetFrameworks>net5.0;netstandard2.0</TargetFrameworks>
     <RootNamespace>ChannelAdam.TestFramework</RootNamespace>
-    <Authors>Adam Craven</Authors>
     <Version>0.0.0</Version>
-    <Copyright>Copyright 2014-2018 Adam Craven</Copyright>
-    <PackageLicenseUrl>http://www.apache.org/licenses/LICENSE-2.0</PackageLicenseUrl>
+    <Authors>Adam Craven</Authors>
+    <Company>Adam Craven</Company>
+    <Product>ChannelAdam.TestFramework.Xml</Product>
+    <Description>A .NET library with functionality for comparing XML (using XmlUnit).</Description>
+    <Copyright>Copyright 2014-2021 Adam Craven</Copyright>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/channeladam/ChannelAdam.TestFramework.Xml</PackageProjectUrl>
     <RepositoryUrl>https://github.com/channeladam/ChannelAdam.TestFramework.Xml</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageIconUrl>https://devzone.channeladam.com/img/channeladam/channeladam-logo.png</PackageIconUrl>
     <PackageTags>ChannelAdam,Tests,Unit,Integration,XML,Diff</PackageTags>
-    <PackageReleaseNotes>2.0.0 - Refactored out of ChannelAdam.TestFramework v1, target .NET Standard 2.0, no strong name signing</PackageReleaseNotes>
+    <PackageReleaseNotes>
+3.0.0 - Multitarget .NET Standard 2.0 and .NET 5.0, enabled nullable reference types, breaking change with Xml Serialisation with usage of XmlAttributeOverrides.
+2.0.0 - Refactored out of ChannelAdam.TestFramework v1, target .NET Standard 2.0, no strong name signing.
+    </PackageReleaseNotes>
+    <IsPackable>true</IsPackable>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <IncludeSource>true</IncludeSource>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'net5.0' ">
+    <Nullable>enable</Nullable>
+    <WarningsAsErrors>CS8600;CS8602;CS8603</WarningsAsErrors>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" $(Nullable) != 'enable' ">
+    <NoWarn>$(NoWarn);CS8632</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="ChannelAdam.Logging" Version="2.1.0" />
-    <PackageReference Include="ChannelAdam.Reflection" Version="2.0.0" />
-    <PackageReference Include="ChannelAdam.TestFramework" Version="2.2.0" />
-    <PackageReference Include="ChannelAdam.TestFramework.Text" Version="2.0.0" />
-    <PackageReference Include="XmlUnit.Core" Version="2.6.0" />
+    <PackageReference Include="ChannelAdam.Logging" Version="3.0.0"/>
+    <PackageReference Include="ChannelAdam.Reflection" Version="3.0.0"/>
+    <PackageReference Include="ChannelAdam.TestFramework" Version="3.0.5"/>
+    <PackageReference Include="ChannelAdam.TestFramework.Text" Version="3.0.1"/>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="XmlUnit.Core" Version="2.9.0"/>
   </ItemGroup>
-
 </Project>

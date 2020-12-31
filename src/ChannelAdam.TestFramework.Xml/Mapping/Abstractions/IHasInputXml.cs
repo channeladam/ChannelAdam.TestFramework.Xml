@@ -1,6 +1,6 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="IHasInputXml.cs">
-//     Copyright (c) 2016-2018 Adam Craven. All rights reserved.
+//     Copyright (c) 2016-2021 Adam Craven. All rights reserved.
 // </copyright>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -23,9 +23,9 @@ namespace ChannelAdam.TestFramework.Mapping.Abstractions
 
     public interface IHasInputXml
     {
-        XElement InputXml { get; }
+        XElement? InputXml { get; }
 
-        void ArrangeInputXml(XElement xmlElement);
+        void ArrangeInputXml(XElement? xmlElement);
 
         void ArrangeInputXml(string xmlValue);
 
@@ -33,7 +33,7 @@ namespace ChannelAdam.TestFramework.Mapping.Abstractions
 
         void ArrangeInputXml(object valueToSerialise, XmlRootAttribute xmlRootAttribute);
 
-        void ArrangeInputXml(object valueToSerialise, XmlAttributeOverrides xmlAttributeOverrides);
+        void ArrangeInputXml(object valueToSerialise, string equalityKeyOfXmlAttributeOverridesToAvoidXmlSerializerMemoryLeak, XmlAttributeOverrides xmlAttributeOverrides);
 
         void ArrangeInputXml(Assembly assembly, string resourceName);
     }

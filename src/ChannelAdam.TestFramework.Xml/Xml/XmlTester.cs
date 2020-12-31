@@ -1,6 +1,6 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="XmlTester.cs">
-//     Copyright (c) 2016-2018 Adam Craven. All rights reserved.
+//     Copyright (c) 2016-2021 Adam Craven. All rights reserved.
 // </copyright>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -43,9 +43,9 @@ namespace ChannelAdam.TestFramework.Xml
         private readonly ILogAsserter logAssert;
         private readonly IComparisonFormatter comparisonFormatter;
 
-        private XElement actualXml;
-        private XElement expectedXml;
-        private Diff differences;
+        private XElement? actualXml;
+        private XElement? expectedXml;
+        private Diff? differences;
 
         #endregion
 
@@ -65,9 +65,9 @@ namespace ChannelAdam.TestFramework.Xml
 
         public XmlTester(ISimpleLogger logger, ILogAsserter logAsserter, IComparisonFormatter comparisonFormatter)
         {
-            this.logger = logger;
-            this.logAssert = logAsserter;
-            this.comparisonFormatter = comparisonFormatter;
+            this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            this.logAssert = logAsserter ?? throw new ArgumentNullException(nameof(logAsserter));
+            this.comparisonFormatter = comparisonFormatter ?? throw new ArgumentNullException(nameof(comparisonFormatter));
         }
 
         #endregion
@@ -77,18 +77,18 @@ namespace ChannelAdam.TestFramework.Xml
         /// <summary>
         /// Occurs when the actual XML property is changed.
         /// </summary>
-        public event EventHandler<XmlChangedEventArgs> ActualXmlChangedEvent;
+        public event EventHandler<XmlChangedEventArgs>? ActualXmlChangedEvent;
 
         /// <summary>
         /// Occurs when expected XML property is changed.
         /// </summary>
-        public event EventHandler<XmlChangedEventArgs> ExpectedXmlChangedEvent;
+        public event EventHandler<XmlChangedEventArgs>? ExpectedXmlChangedEvent;
 
         #endregion
 
         #region Properties
 
-        public XElement ActualXml
+        public XElement? ActualXml
         {
             get
             {
@@ -102,7 +102,7 @@ namespace ChannelAdam.TestFramework.Xml
             }
         }
 
-        public XElement ExpectedXml
+        public XElement? ExpectedXml
         {
             get
             {
@@ -116,7 +116,7 @@ namespace ChannelAdam.TestFramework.Xml
             }
         }
 
-        public Diff Differences
+        public Diff? Differences
         {
             get { return this.differences; }
         }
@@ -141,7 +141,7 @@ namespace ChannelAdam.TestFramework.Xml
         /// Arrange the actual XML from the given XElement.
         /// </summary>
         /// <param name="xmlElement">The XElement to set as the input.</param>
-        public void ArrangeActualXml(XElement xmlElement)
+        public void ArrangeActualXml(XElement? xmlElement)
         {
             if (xmlElement == null)
             {
@@ -174,10 +174,30 @@ namespace ChannelAdam.TestFramework.Xml
         /// Arrange the actual XML by serialising the given object into XML.
         /// </summary>
         /// <param name="valueToSerialise">The object to serialise as the actual XML.</param>
+        /// <param name="equalityKeyOfXmlAttributeOverridesToAvoidXmlSerializerMemoryLeak">Key of the XmlSerializer cache, unique for the given XmlAttributeOverrides, used to avoid XmlSerializer memory leaks. CAUTION: XmlAttributeOverrides.GetHashCode() returns a different value for each instance, even if each instance has the exact same objects - so consider making your own equality key based on what you added to the XmlAttributeOverrides.</param>
         /// <param name="xmlAttributeOverrides">The XML attribute overrides.</param>
-        public void ArrangeActualXml(object valueToSerialise, XmlAttributeOverrides xmlAttributeOverrides)
+        /// <remarks>
+        /// <para>
+        /// https://docs.microsoft.com/en-us/dotnet/api/system.xml.serialization.xmlserializer?view=net-5.0#dynamically-generated-assemblies
+        /// Dynamically Generated Assemblies
+        /// To increase performance, the XML serialization infrastructure dynamically generates assemblies to serialize and deserialize specified types.
+        /// The infrastructure finds and reuses those assemblies.
+        /// This behavior occurs only when using the following constructors:
+        ///   XmlSerializer.XmlSerializer(Type)
+        ///   XmlSerializer.XmlSerializer(Type, String)
+        /// If you use any of the other constructors, multiple versions of the same assembly are generated and never unloaded, which results in a memory leak and poor performance.
+        /// The easiest solution is to use one of the previously mentioned two constructors.
+        /// Otherwise, you must cache the assemblies...
+        /// </para>
+        /// <para>
+        /// ChannelAdam.Xml does the caching for you, but it requires you to specify the key to use in the cache.
+        /// CAUTION: XmlAttributeOverrides.GetHashCode() returns a different value for each instance, even if each instance has the exact same objects
+        ///   - so consider making your own equality key based on what you added to the XmlAttributeOverrides.
+        /// </para>
+        /// </remarks>
+        public void ArrangeActualXml(object valueToSerialise, string equalityKeyOfXmlAttributeOverridesToAvoidXmlSerializerMemoryLeak, XmlAttributeOverrides xmlAttributeOverrides)
         {
-            this.ArrangeActualXml(valueToSerialise.SerialiseToXml(xmlAttributeOverrides));
+            this.ArrangeActualXml(valueToSerialise.SerialiseToXml(equalityKeyOfXmlAttributeOverridesToAvoidXmlSerializerMemoryLeak, xmlAttributeOverrides));
         }
 
         /// <summary>
@@ -207,7 +227,7 @@ namespace ChannelAdam.TestFramework.Xml
         /// Arrange the expected XML from the given XElement.
         /// </summary>
         /// <param name="xmlElement">The XML element.</param>
-        public void ArrangeExpectedXml(XElement xmlElement)
+        public void ArrangeExpectedXml(XElement? xmlElement)
         {
             if (xmlElement == null)
             {
@@ -240,10 +260,30 @@ namespace ChannelAdam.TestFramework.Xml
         /// Arrange the expected XML by serialising the given object into XML.
         /// </summary>
         /// <param name="valueToSerialise">The value to serialise as the expected XML.</param>
+        /// <param name="equalityKeyOfXmlAttributeOverridesToAvoidXmlSerializerMemoryLeak">Key of the XmlSerializer cache, unique for the given XmlAttributeOverrides, used to avoid XmlSerializer memory leaks. CAUTION: XmlAttributeOverrides.GetHashCode() returns a different value for each instance, even if each instance has the exact same objects - so consider making your own equality key based on what you added to the XmlAttributeOverrides.</param>
         /// <param name="xmlAttributeOverrides">The XML attribute overrides.</param>
-        public void ArrangeExpectedXml(object valueToSerialise, XmlAttributeOverrides xmlAttributeOverrides)
+        /// <remarks>
+        /// <para>
+        /// https://docs.microsoft.com/en-us/dotnet/api/system.xml.serialization.xmlserializer?view=net-5.0#dynamically-generated-assemblies
+        /// Dynamically Generated Assemblies
+        /// To increase performance, the XML serialization infrastructure dynamically generates assemblies to serialize and deserialize specified types.
+        /// The infrastructure finds and reuses those assemblies.
+        /// This behavior occurs only when using the following constructors:
+        ///   XmlSerializer.XmlSerializer(Type)
+        ///   XmlSerializer.XmlSerializer(Type, String)
+        /// If you use any of the other constructors, multiple versions of the same assembly are generated and never unloaded, which results in a memory leak and poor performance.
+        /// The easiest solution is to use one of the previously mentioned two constructors.
+        /// Otherwise, you must cache the assemblies...
+        /// </para>
+        /// <para>
+        /// ChannelAdam.Xml does the caching for you, but it requires you to specify the key to use in the cache.
+        /// CAUTION: XmlAttributeOverrides.GetHashCode() returns a different value for each instance, even if each instance has the exact same objects
+        ///   - so consider making your own equality key based on what you added to the XmlAttributeOverrides.
+        /// </para>
+        /// </remarks>
+        public void ArrangeExpectedXml(object valueToSerialise, string equalityKeyOfXmlAttributeOverridesToAvoidXmlSerializerMemoryLeak, XmlAttributeOverrides xmlAttributeOverrides)
         {
-            this.ArrangeExpectedXml(valueToSerialise.SerialiseToXml(xmlAttributeOverrides));
+            this.ArrangeExpectedXml(valueToSerialise.SerialiseToXml(equalityKeyOfXmlAttributeOverridesToAvoidXmlSerializerMemoryLeak, xmlAttributeOverrides));
         }
 
         /// <summary>
@@ -271,12 +311,22 @@ namespace ChannelAdam.TestFramework.Xml
         /// Assert the actual XML against the expected XML, ignoring the elements specified by the given XML filter.
         /// </summary>
         /// <param name="xmlFilter">The XML filter to be applied to ignore specified elements from the assertion.</param>
-        public virtual void AssertActualXmlEqualsExpectedXml(IXmlFilter xmlFilter)
+        public virtual void AssertActualXmlEqualsExpectedXml(IXmlFilter? xmlFilter)
         {
             this.logger.Log("Asserting actual and expected XML are equal");
 
             var filteredExpectedXml = this.ExpectedXml;
             var filteredActualXml = this.ActualXml;
+
+            if (filteredExpectedXml is null)
+            {
+                throw new InvalidOperationException("ExpectedXml must be specified before calling AssertActualXmlEqualsExpectedXml()");
+            }
+
+            if (filteredActualXml is null)
+            {
+                throw new InvalidOperationException("ActualXml must be specified before calling AssertActualXmlEqualsExpectedXml()");
+            }
 
             if (xmlFilter?.HasFilters() == true)
             {
@@ -289,7 +339,8 @@ namespace ChannelAdam.TestFramework.Xml
             var isEqual = this.IsEqual(filteredExpectedXml, filteredActualXml);
             if (!isEqual)
             {
-                var report = string.Join("." + Environment.NewLine, this.differences.Differences);
+                // IsEqual() sets this.differences... so it cannot be null
+                var report = string.Join("." + Environment.NewLine, this.differences!.Differences);
                 this.logger.Log("The differences are: " + Environment.NewLine + report);
             }
 
@@ -306,9 +357,32 @@ namespace ChannelAdam.TestFramework.Xml
             return this.IsEqual(this.ExpectedXml, this.ActualXml);
         }
 
-        public bool IsEqual(XNode expected, XNode actual)
+        public bool IsEqual(XNode? expected, XNode? actual)
         {
-            return this.IsEqual(expected.ToXmlNode(), actual.ToXmlNode());
+            if (expected is null)
+            {
+                throw new ArgumentNullException(nameof(expected));
+            }
+
+            if (actual is null)
+            {
+                throw new ArgumentNullException(nameof(actual));
+            }
+
+            var expectedXmlNode = expected.ToXmlNode();
+            var actualXmlNode = actual.ToXmlNode();
+
+            if (expectedXmlNode is null)
+            {
+                throw new InvalidOperationException("Expected XML Node must be specified before calling IsEqual()");
+            }
+
+            if (actualXmlNode is null)
+            {
+                throw new InvalidOperationException("Actual XML Node must be specified before calling IsEqual()");
+            }
+
+            return this.IsEqual(expectedXmlNode, actualXmlNode);
         }
 
         /// <summary>
@@ -342,7 +416,7 @@ namespace ChannelAdam.TestFramework.Xml
 
         #region Protected Change Methods
 
-        protected virtual void OnExpectedXmlChanged(XNode value)
+        protected virtual void OnExpectedXmlChanged(XNode? value)
         {
             if (this.ExpectedXmlChangedEvent == null)
             {
@@ -356,7 +430,7 @@ namespace ChannelAdam.TestFramework.Xml
             }
         }
 
-        protected virtual void OnActualXmlChanged(XNode value)
+        protected virtual void OnActualXmlChanged(XNode? value)
         {
             if (this.ActualXmlChangedEvent == null)
             {

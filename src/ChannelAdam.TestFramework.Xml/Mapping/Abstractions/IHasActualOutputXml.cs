@@ -1,6 +1,6 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="IHasActualOutputXml.cs">
-//     Copyright (c) 2016-2018 Adam Craven. All rights reserved.
+//     Copyright (c) 2016-2021 Adam Craven. All rights reserved.
 // </copyright>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,7 +21,7 @@ namespace ChannelAdam.TestFramework.Mapping.Abstractions
 
     public interface IHasActualOutputXml
     {
-        XElement ActualOutputXml { get; set; }
+        XElement? ActualOutputXml { get; set; }
 
         void SetActualOutputXmlFromXmlFile(string fileName);
 

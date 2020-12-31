@@ -1,6 +1,6 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="IXmlFilter.cs">
-//     Copyright (c) 2016-2018 Adam Craven. All rights reserved.
+//     Copyright (c) 2016-2021 Adam Craven. All rights reserved.
 // </copyright>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -26,7 +26,7 @@ namespace ChannelAdam.TestFramework.Xml.Abstractions
 
         IList<string> XPathsToIgnore { get; }
 
-        XElement ApplyFilterTo(XElement xmlElement);
+        XElement? ApplyFilterTo(XElement? xmlElement);
 
         bool HasFilters();
 

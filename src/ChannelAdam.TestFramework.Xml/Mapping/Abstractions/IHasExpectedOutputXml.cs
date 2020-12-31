@@ -1,6 +1,6 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="IHasExpectedOutputXml.cs">
-//     Copyright (c) 2016-2018 Adam Craven. All rights reserved.
+//     Copyright (c) 2016-2021 Adam Craven. All rights reserved.
 // </copyright>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -23,9 +23,9 @@ namespace ChannelAdam.TestFramework.Mapping.Abstractions
 
     public interface IHasExpectedOutputXml
     {
-        XElement ExpectedOutputXml { get; }
+        XElement? ExpectedOutputXml { get; }
 
-        void ArrangeExpectedOutputXml(XElement xmlElement);
+        void ArrangeExpectedOutputXml(XElement? xmlElement);
 
         void ArrangeExpectedOutputXml(string xmlValue);
 
@@ -33,7 +33,7 @@ namespace ChannelAdam.TestFramework.Mapping.Abstractions
 
         void ArrangeExpectedOutputXml(object valueToSerialise, XmlRootAttribute xmlRootAttribute);
 
-        void ArrangeExpectedOutputXml(object valueToSerialise, XmlAttributeOverrides xmlAttributeOverrides);
+        void ArrangeExpectedOutputXml(object valueToSerialise, string equalityKeyOfXmlAttributeOverridesToAvoidXmlSerializerMemoryLeak, XmlAttributeOverrides xmlAttributeOverrides);
 
         void ArrangeExpectedOutputXml(Assembly assembly, string resourceName);
     }

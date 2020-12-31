@@ -1,6 +1,6 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="XmlAsserter.cs">
-//     Copyright (c) 2016-2018 Adam Craven. All rights reserved.
+//     Copyright (c) 2016-2021 Adam Craven. All rights reserved.
 // </copyright>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -51,7 +51,7 @@ namespace ChannelAdam.TestFramework.Xml
             this.XPathValueEquals(description, xpath, rootElement, null, expected);
         }
 
-        public void XPathValueEquals(string description, string xpath, XNode rootElement, XmlNamespaceManager namespaceManager, string expected)
+        public void XPathValueEquals(string description, string xpath, XNode rootElement, XmlNamespaceManager? namespaceManager, string expected)
         {
             var elements = rootElement.XPathSelectElements(xpath, namespaceManager);
             if (!elements.Any())
@@ -84,12 +84,14 @@ namespace ChannelAdam.TestFramework.Xml
                 else
                 {
                     this.logAssert.Fail("Actual element should have been null, but had a value of {0}", actualElement.Value);
+                    return; // necessary only for static code analyser below.
                 }
             }
 
             if (actualElement == null)
             {
                 this.logAssert.Fail("Actual element should NOT have been null. Expected value was: {0}", expectedElement.Value);
+                return; // necessary only for static code analyser below.
             }
 
             var expected = expectedElement.Value;
@@ -98,10 +100,10 @@ namespace ChannelAdam.TestFramework.Xml
             this.logAssert.AreEqual(description, expected, actual);
         }
 
-        public void XPathValuesAreEqual(string description, string expectedXpath, XNode expectedElements, XmlNamespaceManager expectedNamespaceManager, string actualXpath, XNode actualElements, XmlNamespaceManager actualNamespaceManager)
+        public void XPathValuesAreEqual(string description, string expectedXpath, XNode expectedElements, XmlNamespaceManager? expectedNamespaceManager, string actualXpath, XNode actualElements, XmlNamespaceManager? actualNamespaceManager)
         {
-            var expected = expectedElements.XPathSelectElement(expectedXpath, expectedNamespaceManager).Value;
-            var actual = actualElements.XPathSelectElement(actualXpath, actualNamespaceManager).Value;
+            var expected = expectedElements.XPathSelectElement(expectedXpath, expectedNamespaceManager)?.Value;
+            var actual = actualElements.XPathSelectElement(actualXpath, actualNamespaceManager)?.Value;
 
             this.logAssert.AreEqual(description, expected, actual);
         }
@@ -111,7 +113,7 @@ namespace ChannelAdam.TestFramework.Xml
             this.AreEqual(expectedXml, actualXml, null);
         }
 
-        public void AreEqual(XElement expectedXml, XElement actualXml, IXmlFilter xmlFilter)
+        public void AreEqual(XElement expectedXml, XElement actualXml, IXmlFilter? xmlFilter)
         {
             var tester = new XmlTester(this.logAssert);
             tester.ArrangeExpectedXml(expectedXml);

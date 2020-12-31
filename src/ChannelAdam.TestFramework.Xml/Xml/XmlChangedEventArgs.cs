@@ -1,6 +1,6 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="XmlChangedEventArgs.cs">
-//     Copyright (c) 2016-2018 Adam Craven. All rights reserved.
+//     Copyright (c) 2016-2021 Adam Craven. All rights reserved.
 // </copyright>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,11 +22,11 @@ namespace ChannelAdam.TestFramework.Xml
 
     public class XmlChangedEventArgs : EventArgs
     {
-        public XmlChangedEventArgs(XNode xml)
+        public XmlChangedEventArgs(XNode? xml)
         {
             this.Xml = xml;
         }
 
-        public XNode Xml { get; private set; }
+        public XNode? Xml { get; }
     }
 }

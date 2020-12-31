@@ -1,6 +1,6 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="XmlFilter.cs">
-//     Copyright (c) 2016-2018 Adam Craven. All rights reserved.
+//     Copyright (c) 2016-2021 Adam Craven. All rights reserved.
 // </copyright>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -40,8 +40,8 @@ namespace ChannelAdam.TestFramework.Xml
 
         public XmlFilter(IList<string> elementLocalNamesToIgnore, IList<string> xpathsToIgnore)
         {
-            this.ElementLocalNamesToIgnore = elementLocalNamesToIgnore;
-            this.XPathsToIgnore = xpathsToIgnore;
+            this.ElementLocalNamesToIgnore = elementLocalNamesToIgnore ?? throw new System.ArgumentNullException(nameof(elementLocalNamesToIgnore));
+            this.XPathsToIgnore = xpathsToIgnore ?? throw new System.ArgumentNullException(nameof(xpathsToIgnore));
         }
 
         #endregion Public Constructors
@@ -56,8 +56,13 @@ namespace ChannelAdam.TestFramework.Xml
 
         #region Public Methods
 
-        public XElement ApplyFilterTo(XElement xmlElement)
+        public XElement? ApplyFilterTo(XElement? xmlElement)
         {
+            if (xmlElement is null)
+            {
+                throw new System.ArgumentNullException(nameof(xmlElement));
+            }
+
             var result = new XElement(xmlElement);
 
             if (this.ElementLocalNamesToIgnore.Count > 0)

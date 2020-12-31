@@ -1,6 +1,6 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="IgnoreElementTagNameDifferenceEvaluator.cs">
-//     Copyright (c) 2016-2018 Adam Craven. All rights reserved.
+//     Copyright (c) 2016-2021 Adam Craven. All rights reserved.
 // </copyright>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -48,8 +48,7 @@ namespace ChannelAdam.TestFramework.Xml
                 var expectedNode = comparison.ControlDetails.Target;
                 var actualNode = comparison.TestDetails.Target;
 
-                if (expectedNode.LocalName == actualNode.LocalName &&
-                    expectedNode.NamespaceURI == actualNode.NamespaceURI)
+                if (expectedNode.LocalName == actualNode.LocalName && expectedNode.NamespaceURI == actualNode.NamespaceURI)
                 {
                     return ComparisonResult.SIMILAR;
                 }

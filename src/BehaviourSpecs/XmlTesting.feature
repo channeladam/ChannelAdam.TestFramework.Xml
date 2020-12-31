@@ -19,3 +19,14 @@ Scenario: Should error when two xml samples have the same elements but a differe
 Given two xml samples with the same elements but a different value
 When the two xml samples are compared
 Then the two xml samples are treated as different
+
+Scenario: Should assert error when two xml samples have different elements
+Given two xml samples with the different elements
+When an equality assertion is performed
+Then an assertion exception occurred
+
+Scenario: Should assert error when two xml samples have the same elements but a different value
+Given two xml samples with the same elements but a different value
+When an equality assertion is performed
+Then the two xml samples are treated as different
+Then an assertion exception occurred
